@@ -4,13 +4,13 @@
  * Compiler: XC8
  * IDE: MPLAB X IDE
  * 
- * Oscillator: 8MHz (adjust _XTAL_FREQ if different)
+ * Oscillator: 16MHz HFINTOSC (adjust _XTAL_FREQ if different)
  */
 
 #include "am2302.h"
 
-// Set your oscillator frequency here (8MHz by default)
-#define _XTAL_FREQ 8000000
+// Set your oscillator frequency here (16MHz HFINTOSC)
+#define _XTAL_FREQ 16000000
 
 /*
  * Initialize AM2302 sensor
@@ -81,12 +81,15 @@ uint8_t AM2302_ReadByte(void) {
 
 /*
  * Delay function: microseconds
- * Accurate for 8MHz oscillator
+ * Accurate for 16MHz oscillator (HFINTOSC)
+ * Each instruction cycle = 4 clock cycles = 0.25us at 16MHz
+ * We need microseconds * 4 instruction cycles
  */
 void AM2302_Delay_us(uint16_t microseconds) {
-    // Each instruction cycle = 4 clock cycles at 8MHz = 0.5us
-    // We need microseconds * 2 instruction cycles
-    while (microseconds--) {
+    uint16_t i;
+    for (i = 0; i < microseconds; i++) {
+        asm("nop");
+        asm("nop");
         asm("nop");
         asm("nop");
     }
