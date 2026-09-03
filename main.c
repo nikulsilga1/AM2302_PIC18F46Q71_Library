@@ -3,7 +3,7 @@
  * Reads temperature and humidity and displays via UART/serial
  * 
  * Configuration:
- * - Oscillator: HFINTOSC @ 16MHz
+ * - Oscillator: HF (High Frequency) Internal Oscillator @ 16MHz
  * - RC2 (Pin 35): AM2302 Data Line
  * - RX (Pin 26): UART RX
  * - TX (Pin 25): UART TX
@@ -15,12 +15,12 @@
 
 // Configuration bits for PIC18F46Q71
 #pragma config FEXTOSC = OFF    // External Oscillator disabled
-#pragma config RSTOSC = HFINTOSC_64MHz // Power-up Default Value for COSC bits
+#pragma config RSTOSC = HFINTOSC // High Frequency Internal Oscillator
 #pragma config CLKOEN = OFF     // CLKOUT Output Enable bit (CLKOUT function is disabled)
 #pragma config CSWEN = ON       // Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
 #pragma config FCMEN = ON       // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor enabled)
 
-#define _XTAL_FREQ 16000000  // 16MHz HFINTOSC
+#define _XTAL_FREQ 16000000  // 16MHz HF Internal Oscillator
 
 // UART Initialization
 void UART_Init(void) {
@@ -60,8 +60,8 @@ void main(void) {
     // Wait for sensor to stabilize
     __delay_ms(2000);
     
-    UART_PutString("AM2302 Sensor Test - 16MHz HFINTOSC\r\n");
-    UART_PutString("====================================\r\n");
+    UART_PutString("AM2302 Sensor Test - 16MHz HF Internal Oscillator\r\n");
+    UART_PutString("====================================================\r\n");
     
     while (1) {
         attempt++;
