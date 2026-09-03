@@ -6,6 +6,7 @@
  * 
  * Oscillator: 16MHz HFINTOSC (adjust _XTAL_FREQ if different)
  */
+#include "mcc_generated_files/system/system.h"
 
 #include "am2302.h"
 
