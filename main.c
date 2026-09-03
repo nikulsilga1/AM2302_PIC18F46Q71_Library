@@ -2,7 +2,8 @@
  * Example Usage: AM2302 Sensor with PIC18F46Q71
  * Reads temperature and humidity and displays via UART/serial
  * 
- * Pin Configuration:
+ * Configuration:
+ * - Oscillator: HFINTOSC @ 16MHz
  * - RC2 (Pin 35): AM2302 Data Line
  * - RX (Pin 26): UART RX
  * - TX (Pin 25): UART TX
@@ -13,19 +14,19 @@
 #include "am2302.h"
 
 // Configuration bits for PIC18F46Q71
-#pragma config FEXTOSC = HS     // External Oscillator Frequency Selection bits (HS (Crystal oscillator above 8 MHz))
-#pragma config RSTOSC = EXTOSC  // Power-up Default Value for COSC bits (EXTOSC operating per FEXTOSC bits)
+#pragma config FEXTOSC = OFF    // External Oscillator disabled
+#pragma config RSTOSC = HFINTOSC_64MHz // Power-up Default Value for COSC bits
 #pragma config CLKOEN = OFF     // CLKOUT Output Enable bit (CLKOUT function is disabled)
 #pragma config CSWEN = ON       // Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
 #pragma config FCMEN = ON       // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor enabled)
 
-#define _XTAL_FREQ 8000000  // 8MHz oscillator
+#define _XTAL_FREQ 16000000  // 16MHz HFINTOSC
 
 // UART Initialization
 void UART_Init(void) {
-    // Configure UART for 9600 baud at 8MHz
+    // Configure UART for 9600 baud at 16MHz
     BAUD1CONbits.BRG16 = 1;
-    SP1BRG = 207;  // For 9600 baud @ 8MHz
+    SP1BRG = 416;  // For 9600 baud @ 16MHz
     
     TX1STAbits.TXEN = 1;   // Enable transmitter
     RCSTAbits.CREN = 1;    // Enable receiver
@@ -59,8 +60,8 @@ void main(void) {
     // Wait for sensor to stabilize
     __delay_ms(2000);
     
-    UART_PutString("AM2302 Sensor Test\r\n");
-    UART_PutString("================\r\n");
+    UART_PutString("AM2302 Sensor Test - 16MHz HFINTOSC\r\n");
+    UART_PutString("====================================\r\n");
     
     while (1) {
         attempt++;
